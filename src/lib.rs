@@ -6,8 +6,8 @@ pub mod cpu {
 
 pub mod peripherals {
     use super::gpio::*;
-    use super::spi::*;
     use super::i2c::*;
+    use super::spi::*;
     use super::uart::*;
 
     pub struct Peripherals {
@@ -62,8 +62,8 @@ pub mod peripheral {
 }
 
 pub mod gpio {
-    use std::marker::PhantomData;
     use dummy_esp_idf_sys::EspError;
+    use std::marker::PhantomData;
 
     pub struct AnyInputPin {}
     pub struct AnyOutputPin {}
@@ -71,7 +71,12 @@ pub mod gpio {
     pub struct Input {}
     pub struct Output {}
 
-    pub enum DriveStrength { I5mA, I10mA, I20mA, I40mA }
+    pub enum DriveStrength {
+        I5mA,
+        I10mA,
+        I20mA,
+        I40mA,
+    }
 
     pub trait OutputPin {
         fn downgrade_output(self) -> AnyOutputPin;
@@ -117,7 +122,7 @@ pub mod gpio {
                     AnyIOPin {}
                 }
             }
-        }
+        };
     }
 
     def_gpio!(Gpio0);
@@ -160,11 +165,11 @@ pub mod gpio {
 
     impl<'a, T, MODE> PinDriver<'a, T, MODE> {
         pub fn input(_: impl InputPin) -> Result<Self, EspError> {
-            Ok(Self {_p: PhantomData})
+            Ok(Self { _p: PhantomData })
         }
 
         pub fn output(_: impl OutputPin) -> Result<Self, EspError> {
-            Ok(Self {_p: PhantomData})
+            Ok(Self { _p: PhantomData })
         }
 
         pub fn set_high(&mut self) -> Result<(), EspError> {
@@ -193,7 +198,7 @@ pub mod spi {
     macro_rules! def_spi {
         ($structname:ident) => {
             pub struct $structname();
-        }
+        };
     }
 
     def_spi!(SPI1);
@@ -214,8 +219,7 @@ pub mod i2c {
 
         impl Config {
             pub fn new() -> Self {
-                Self {
-                }
+                Self {}
             }
 
             pub fn baudrate(self, _: Hertz) -> Self {
@@ -240,14 +244,12 @@ pub mod i2c {
 
     impl<'a> I2cDriver<'a> {
         pub fn new<I2C: I2c>(
-            _i2c: impl Peripheral<P=I2C>,
+            _i2c: impl Peripheral<P = I2C>,
             _sda: impl super::gpio::IOPin,
             _scl: impl super::gpio::IOPin,
             _config: &I2cConfig,
         ) -> Result<Self, EspError> {
-            Ok(Self {
-                _p: PhantomData,
-            })
+            Ok(Self { _p: PhantomData })
         }
     }
 
@@ -257,7 +259,7 @@ pub mod i2c {
         fn write(
             &mut self,
             _: embedded_hal_0_2::blocking::i2c::SevenBitAddress,
-            _: &[u8]
+            _: &[u8],
         ) -> Result<(), Self::Error> {
             Ok(())
         }
@@ -270,7 +272,7 @@ pub mod i2c {
             &mut self,
             _: embedded_hal_0_2::blocking::i2c::SevenBitAddress,
             _: &[u8],
-            _: &mut [u8]
+            _: &mut [u8],
         ) -> Result<(), Self::Error> {
             Ok(())
         }
@@ -285,7 +287,7 @@ pub mod i2c {
             impl Peripheral for $structname {
                 type P = $structname;
             }
-        }
+        };
     }
 
     def_i2c!(I2C0);
@@ -293,9 +295,9 @@ pub mod i2c {
 }
 
 pub mod uart {
-    use std::marker::PhantomData;
+    use super::gpio::{InputPin, OutputPin};
     use dummy_esp_idf_sys::EspError;
-    use super::gpio::{OutputPin, InputPin};
+    use std::marker::PhantomData;
 
     pub trait UART {}
 
@@ -303,7 +305,7 @@ pub mod uart {
         ($structname:ident) => {
             pub struct $structname();
             impl UART for $structname {}
-        }
+        };
     }
 
     def_uart!(UART0);
@@ -314,8 +316,7 @@ pub mod uart {
         use super::super::units::*;
 
         #[derive(Default)]
-        pub struct Config {
-        }
+        pub struct Config {}
 
         impl Config {
             pub fn data_bits(self, _: DataBits) -> Self {
@@ -344,15 +345,24 @@ pub mod uart {
         }
 
         pub enum DataBits {
-            DataBits5, DataBits6, DataBits7, DataBits8,
+            DataBits5,
+            DataBits6,
+            DataBits7,
+            DataBits8,
         }
 
         pub enum StopBits {
-            STOP1, STOP1P5, STOP2,
+            STOP1,
+            STOP1P5,
+            STOP2,
         }
 
         pub enum FlowControl {
-            None, RTS, CTS, CTSRTS, MAX,
+            None,
+            RTS,
+            CTS,
+            CTSRTS,
+            MAX,
         }
 
         impl Config {
@@ -375,19 +385,13 @@ pub mod uart {
             _rts: Option<impl OutputPin>,
             _config: &config::Config,
         ) -> Result<Self, EspError> {
-            Ok(Self {
-                p: PhantomData,
-            })
+            Ok(Self { p: PhantomData })
         }
 
         pub fn split(&mut self) -> (UartTxDriver<'_>, UartRxDriver<'_>) {
             (
-                UartTxDriver {
-                    p: PhantomData,
-                },
-                UartRxDriver {
-                    p: PhantomData,
-                },
+                UartTxDriver { p: PhantomData },
+                UartRxDriver { p: PhantomData },
             )
         }
 
@@ -419,12 +423,10 @@ pub mod uart {
     }
 }
 
-pub mod task {
-}
+pub mod task {}
 
 pub mod reset {
-    pub fn restart() {
-    }
+    pub fn restart() {}
 }
 
 pub mod units {
