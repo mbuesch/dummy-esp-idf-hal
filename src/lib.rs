@@ -9,6 +9,7 @@ pub mod peripherals {
     use super::i2c::*;
     use super::spi::*;
     use super::uart::*;
+    use super::modem::*;
 
     pub struct Peripherals {
         pub spi1: SPI1,
@@ -19,6 +20,7 @@ pub mod peripherals {
         pub uart0: UART0,
         pub uart1: UART1,
         pub uart2: UART2,
+        pub modem: Modem,
         pub pins: Pins,
     }
 
@@ -33,6 +35,7 @@ pub mod peripherals {
                 uart0: UART0(),
                 uart1: UART1(),
                 uart2: UART2(),
+                modem: Modem(),
                 pins: Pins {
                     gpio0: Gpio0(),
                     gpio1: Gpio1(),
@@ -421,6 +424,16 @@ pub mod uart {
             Ok(())
         }
     }
+}
+
+pub mod modem {
+    use super::peripheral::Peripheral;
+
+    pub trait WifiModemPeripheral: Peripheral<P = Self> { }
+
+    pub struct Modem();
+    impl Peripheral for Modem { type P = Self; }
+    impl WifiModemPeripheral for Modem { }
 }
 
 pub mod task {}
