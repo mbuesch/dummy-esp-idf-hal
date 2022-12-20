@@ -7,9 +7,9 @@ pub mod cpu {
 pub mod peripherals {
     use super::gpio::*;
     use super::i2c::*;
+    use super::modem::*;
     use super::spi::*;
     use super::uart::*;
-    use super::modem::*;
 
     pub struct Peripherals {
         pub spi1: SPI1,
@@ -429,11 +429,13 @@ pub mod uart {
 pub mod modem {
     use super::peripheral::Peripheral;
 
-    pub trait WifiModemPeripheral: Peripheral<P = Self> { }
+    pub trait WifiModemPeripheral: Peripheral<P = Self> {}
 
     pub struct Modem();
-    impl Peripheral for Modem { type P = Self; }
-    impl WifiModemPeripheral for Modem { }
+    impl Peripheral for Modem {
+        type P = Self;
+    }
+    impl WifiModemPeripheral for Modem {}
 }
 
 pub mod task {}
