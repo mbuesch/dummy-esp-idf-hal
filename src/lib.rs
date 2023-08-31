@@ -183,11 +183,23 @@ pub mod gpio {
             Ok(())
         }
 
+        pub fn toggle(&mut self) -> Result<(), EspError> {
+            Ok(())
+        }
+
         pub fn is_low(&self) -> bool {
             false
         }
 
         pub fn is_high(&self) -> bool {
+            false
+        }
+
+        pub fn is_set_low(&self) -> bool {
+            false
+        }
+
+        pub fn is_set_high(&self) -> bool {
             false
         }
 
