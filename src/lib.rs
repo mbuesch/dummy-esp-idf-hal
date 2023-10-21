@@ -403,7 +403,7 @@ pub mod uart {
             Ok(Self { p: PhantomData })
         }
 
-        pub fn split(&self) -> (UartTxDriver<'_>, UartRxDriver<'_>) {
+        pub fn split(&mut self) -> (UartTxDriver<'_>, UartRxDriver<'_>) {
             (
                 UartTxDriver { p: PhantomData },
                 UartRxDriver { p: PhantomData },
@@ -433,6 +433,10 @@ pub mod uart {
         }
 
         pub fn flush(&self) -> Result<(), EspError> {
+            self.clear()
+        }
+
+        pub fn clear(&self) -> Result<(), EspError> {
             Ok(())
         }
     }
