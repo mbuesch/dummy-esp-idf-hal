@@ -268,26 +268,15 @@ pub mod i2c {
         }
     }
 
-    impl<'a> embedded_hal_0_2::blocking::i2c::Write for I2cDriver<'a> {
-        type Error = ();
-
-        fn write(
-            &mut self,
-            _: embedded_hal_0_2::blocking::i2c::SevenBitAddress,
-            _: &[u8],
-        ) -> Result<(), Self::Error> {
-            Ok(())
-        }
+    impl<'a> embedded_hal::i2c::ErrorType for I2cDriver<'a> {
+        type Error = std::convert::Infallible;
     }
 
-    impl<'a> embedded_hal_0_2::blocking::i2c::WriteRead for I2cDriver<'a> {
-        type Error = ();
-
-        fn write_read(
+    impl<'a> embedded_hal::i2c::I2c for I2cDriver<'a> {
+        fn transaction(
             &mut self,
-            _: embedded_hal_0_2::blocking::i2c::SevenBitAddress,
-            _: &[u8],
-            _: &mut [u8],
+            _: embedded_hal::i2c::SevenBitAddress,
+            _: &mut [embedded_hal::i2c::Operation<'_>]
         ) -> Result<(), Self::Error> {
             Ok(())
         }
