@@ -276,7 +276,7 @@ pub mod i2c {
         fn transaction(
             &mut self,
             _: embedded_hal::i2c::SevenBitAddress,
-            _: &mut [embedded_hal::i2c::Operation<'_>]
+            _: &mut [embedded_hal::i2c::Operation<'_>],
         ) -> Result<(), Self::Error> {
             Ok(())
         }
